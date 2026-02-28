@@ -33,7 +33,7 @@ public class Server
         return newResponse;
     }
 
-    byte[] createBadRequestResponse(bool closeConnection, string? bodyContent = null)
+    byte[] CreateBadRequestResponse(bool closeConnection, string? bodyContent = null)
     {
         string badRequestResponse = "HTTP/1.1 400 BadRequest\r\n";
         if (closeConnection)
@@ -268,33 +268,9 @@ public class Server
                         var userAgentLine = requestLines.Where(l => l.StartsWith("User-Agent")).ToList()[0];
                         var elements = userAgentLine.Split(' ');
                         var userAgentName = elements[1];
-                        Console.WriteLine("poozer " + userAgentName);
                         byte[] byteResponse = CreateOKResponse(closeConnection, userAgentName);
                         
                         connection.Send(byteResponse);
-                    }
-                    else if (httpTarget.StartsWith("/files"))
-                    {
-                        // remove /files
-                        // string fileName = httpTarget.Substring(7);
-                        // string filePath = args[1] + fileName;
-                        // if (File.Exists(filePath))
-                        // {
-                        //     string fileContent = File.ReadAllText(filePath);
-                        //     string stringResponse =
-                        //         $"HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: {fileContent.Length}\r\n\r\n{fileContent}";
-                        //
-                        //     if (closeConnection)
-                        //         stringResponse = AddHeaderToResponse(stringResponse, "Connection: close");
-                        //     
-                        //     byte[] byteResponse = StringToByteArray(stringResponse);
-                        //     connection.Send(byteResponse);
-                        // }
-                        // else
-                        // {
-                        // }
-                        connection.Send(CreateNotFoundResponse(closeConnection));
-
                     }
                     else
                     {
@@ -324,7 +300,7 @@ public class Server
             }
             catch (Exception e)
             {
-                var response = createBadRequestResponse(true);
+                var response = CreateBadRequestResponse(true);
                 connection.Send(response);
                 connection.Close();
             }
